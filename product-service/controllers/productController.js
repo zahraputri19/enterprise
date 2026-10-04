@@ -1,4 +1,5 @@
 const productModel = require('../models/productModel');
+const validateBase64Image = require('../utils/validateBase64Image');
 
 function parseId(value) {
     const id = Number(value);
@@ -19,6 +20,10 @@ function validateProduct(body) {
     if (!Number.isInteger(stock) || stock < 0) {
         errors.push('stock wajib berupa bilangan bulat >= 0');
     }
+    const imageError = validateBase64Image(body.image);
+    if (imageError) {
+        errors.push(imageError);
+    }
 
     return errors;
 }
@@ -29,7 +34,8 @@ function productPayload(body) {
         name: body.name.trim(),
         description: body.description == null ? null : String(body.description),
         price: body.price,
-        stock: body.stock
+        stock: body.stock,
+        image: body.image
     };
 }
 
