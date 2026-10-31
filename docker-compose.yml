@@ -30,6 +30,39 @@ services:
       retries: 5
       start_period: 30s
 
+  cart-service:
+    build: ./cart-service
+    ports:
+      - "3001:8000"
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: cart-db
+      DB_PORT: 5432
+      DB_DATABASE: cartdb
+      DB_USERNAME: appuser
+      DB_PASSWORD: apppassword
+      PRODUCT_SERVICE_URL: http://product-service:3000
+      LOG_CHANNEL: stderr
+    depends_on:
+      cart-db:
+        condition: service_healthy
+
+  cart-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: cartdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - cart-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d cartdb"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
+
   order-service:
     build: ./order-service
     ports:
@@ -43,7 +76,7 @@ services:
       DB_USERNAME: appuser
       DB_PASSWORD: apppassword
       PRODUCT_SERVICE_URL: http://product-service:3000
-      CART_SERVICE_URL: http://cart-service:3001
+      CART_SERVICE_URL: http://cart-service:8000
     depends_on:
       order-db:
         condition: service_healthy
@@ -68,4 +101,5 @@ services:
 
 volumes:
   product-db-data:
+  cart-db-data:
   order-db-data:

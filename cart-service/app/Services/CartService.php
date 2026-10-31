@@ -3,9 +3,9 @@
 namespace App\Services;
 
 use App\Exceptions\CartItemNotFoundException;
-use App\Exceptions\ProductNotFoundException;
 use App\Models\CartItem;
 use App\Services\ProductService;
+use Exception;
 
 class CartService
 {
@@ -33,7 +33,7 @@ class CartService
     public function addItem(int $userId, int $productId, int $quantity): CartItem
     {
         if (! $this->productService->getProduct($productId)) {
-            throw new ProductNotFoundException($productId);
+            throw new Exception("Produk dengan ID {$productId} tidak ditemukan", 404);
         }
 
         $item = CartItem::firstOrNew([

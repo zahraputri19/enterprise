@@ -23,6 +23,11 @@ class CartClient
                 return $response->json();
             }
 
+            // Jika status 404 (keranjang tidak ditemukan / kosong), kembalikan array kosong
+            if ($response->status() === 404) {
+                return [];
+            }
+
             return ['error' => true, 'status' => $response->status(), 'message' => $response->json('message')];
         } catch (Exception $e) {
             return ['error' => true, 'status' => 503, 'message' => 'Cart service tidak dapat dihubungi, coba lagi nanti'];

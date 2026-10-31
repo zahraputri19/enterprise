@@ -25,14 +25,16 @@ class OrderService
         // 1. Ambil data keranjang dari cart-service
         $cartResponse = $this->cartClient->getCart($userId);
 
-        if (isset($cartResponse['error'])) {
-            if ($cartResponse['status'] === 503) {
+        if (isset($cartResponse['error']) && $cartResponse['error'] === true) {
+            if (isset($cartResponse['status']) && $cartResponse['status'] === 503) {
                 throw new ServiceUnavailableException('Cart service tidak dapat dihubungi, coba lagi nanti');
             }
-            throw new BusinessConflictException($cartResponse['message'] ?? 'Gagal mengambil keranjang');
         }
 
-        $cartItems = $cartResponse['data']['items'] ?? [];
+        // Ambil items dari berbagai kemungkinan struktur JSON (fleksibel)
+        $cartItems = $cartResponse['data']['items'] 
+            ?? $cartResponse['items'] 
+            ?? (is_array($cartResponse) && !isset($cartResponse['error']) ? $cartResponse : []);
 
         if (empty($cartItems)) {
             throw new BusinessConflictException('Keranjang belanja kosong');
@@ -48,14 +50,14 @@ class OrderService
 
             $productResponse = $this->productClient->getProduct($productId);
 
-            if (isset($productResponse['error'])) {
-                if ($productResponse['status'] === 503) {
+            if (isset($productResponse['error']) && $productResponse['error'] === true) {
+                if (isset($productResponse['status']) && $productResponse['status'] === 503) {
                     throw new ServiceUnavailableException('Product service tidak dapat dihubungi, coba lagi nanti');
                 }
                 throw new BusinessConflictException("Produk dengan ID {$productId} tidak ditemukan");
             }
 
-            $productData = $productResponse['data'];
+            $productData = $productResponse['data'] ?? $productResponse;
             $productName = $productData['name'];
             $availableStock = $productData['stock'];
             $unitPrice = (float) $productData['price'];
@@ -76,7 +78,7 @@ class OrderService
             ];
         }
 
-        // 3. Simpan pesanan dalam transaksi database (snapshot harga & nama)
+        // 3. Simpan pesanan dalam transaksi database
         $order = DB::transaction(function () use ($userId, $totalAmount, $preparedItems) {
             $order = Order::create([
                 'user_id' => $userId,
