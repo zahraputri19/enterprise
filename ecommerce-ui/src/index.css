@@ -1,9 +1,16 @@
+/* [TAMBAHAN UI] Tema Warna Biru Laut Modern (Ocean Blue) */
 :root {
-  --indigo: #4338ca;
-  --text: #1e293b;
+  --primary: #0284c7;       /* Biru utama (tombol, harga, judul aktif) */
+  --primary-dark: #0369a1;  /* Biru gelap saat tombol di-hover */
+  --primary-soft: #e0f2fe;  /* Biru lembut (latar pill aktif & tombol keranjang) */
+  --primary-border: #bae6fd;/* Garis tepi biru lembut */
+  --text: #0f172a;
   --muted: #64748b;
   --line: #e2e8f0;
-  --bg: #f8fafc;
+  --bg: #f0f9ff;            /* Latar belakang halaman biru sangat lembut */
+  --surface: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(2, 132, 199, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 10px 25px -5px rgba(2, 132, 199, 0.15), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
 }
 
 * {
@@ -12,163 +19,478 @@
 
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
   background: var(--bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
-  color: var(--indigo);
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.25rem;
+  color: var(--text);
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1020px;
   margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
+  padding: 2rem 1.25rem 4rem;
 }
 
+/* Navbar */
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1.5rem;
-  background: white;
+  padding: 0.85rem 2rem;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-sm);
+}
+
+.navbar strong {
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--primary);
 }
 
 .navbar nav {
   display: flex;
-  gap: 1.25rem;
+  gap: 0.75rem;
   align-items: center;
 }
 
 .navbar nav a {
-  text-decoration: none;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
   color: var(--muted);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.15s ease;
+}
+
+.navbar nav a:hover {
+  color: var(--text);
+  background: var(--bg);
 }
 
 .navbar nav a.active {
-  color: var(--indigo);
+  color: var(--primary);
+  background: var(--primary-soft);
   font-weight: 600;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--muted);
 }
 
 .user select {
   margin-left: 0.5rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
 }
 
+/* Grid & Kartu Produk */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+  gap: 1.25rem;
 }
 
 .card {
-  padding: 1rem;
-  background: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0; /* [TAMBAHAN UI] Padding dipindah ke .card-body & .card-footer agar banner atas penuh */
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), #38bdf8);
+  opacity: 0;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-border);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+/* [TAMBAHAN UI] Banner ilustrasi ikon & badge kategori di bagian atas kartu produk */
+.card-thumb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 115px;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  border-bottom: 1px solid var(--line);
+  transition: background 0.2s ease;
+}
+
+.card:hover .card-thumb {
+  background: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
+}
+
+.card-icon {
+  font-size: 2.75rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.12));
+  transition: transform 0.2s ease;
+}
+
+.card:hover .card-icon {
+  transform: scale(1.08);
+}
+
+.card-tag {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--primary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  border: 1px solid var(--primary-border);
+}
+
+/* [TAMBAHAN UI] Area isi teks (judul, harga, stok, rating) di dalam kartu */
+.card-body {
+  padding: 1.1rem 1.2rem 0.75rem;
+  flex: 1;
+}
+
+/* [TAMBAHAN UI] Area tombol keranjang di bagian bawah kartu */
+.card-footer {
+  padding: 0 1.2rem 1.15rem;
 }
 
 .card h3 {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.6rem;
+  font-size: 1.08rem;
+  line-height: 1.35;
+}
+
+.card h3 a {
+  color: var(--text);
+}
+
+.card h3 a:hover {
+  color: var(--primary);
+}
+
+.card p {
+  margin: 0.35rem 0;
 }
 
 .price {
-  font-weight: 600;
-  color: var(--indigo);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary);
 }
 
 .muted {
   color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .stars {
   color: #f59e0b;
+  font-weight: 600;
+  font-size: 0.92rem;
 }
 
+/* [TAMBAHAN UI] Tombol ikon "+ Keranjang" pada kartu produk */
+.btn-cart {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.85rem;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1px solid var(--primary-border);
+}
+
+.btn-cart:hover:not(:disabled) {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.btn-cart-added {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border-color: #bbf7d0 !important;
+}
+
+/* Alert & Notifikasi */
 .alert {
-  padding: 0.6rem 0.9rem;
-  border-radius: 6px;
-}
-
-.alert-error {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.alert-success {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.actions {
-  display: flex;
-  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.92rem;
+  font-weight: 500;
   margin: 1rem 0;
 }
 
+.alert-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.alert-success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+/* Form Inputs & Buttons */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 1.25rem 0;
+}
+
+.actions input,
+input,
+select,
+textarea {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background: var(--surface);
+  color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.actions input:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
+}
+
 .actions input {
-  width: 4.5rem;
+  width: 5rem;
+  text-align: center;
+  font-weight: 600;
 }
 
 button {
-  padding: 0.4rem 0.8rem;
-  border: 1px solid var(--indigo);
-  border-radius: 6px;
-  background: var(--indigo);
-  color: white;
+  padding: 0.55rem 1.05rem;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  background: var(--primary);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
+/* Tabel Keranjang */
 table {
   width: 100%;
-  border-collapse: collapse;
-  background: white;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
-th,
+thead {
+  background: #f8fafc;
+}
+
+th {
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+
 td {
-  padding: 0.6rem;
+  padding: 0.85rem 1rem;
   text-align: left;
   border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #f0f9ff;
+}
+
+td button[aria-label="Kurangi"],
+td button[aria-label="Tambah"] {
+  padding: 0.25rem 0.65rem;
+  background: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary-border);
+}
+
+td button[aria-label="Kurangi"]:hover:not(:disabled),
+td button[aria-label="Tambah"]:hover:not(:disabled) {
+  background: var(--primary);
+  color: #ffffff;
 }
 
 .qty {
   display: inline-block;
-  min-width: 2rem;
+  min-width: 2.25rem;
   text-align: center;
+  font-weight: 600;
 }
 
 .total {
-  font-size: 1.1rem;
+  margin: 1.25rem 0 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 1.15rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
 }
 
+.total strong {
+  color: var(--primary);
+  font-size: 1.3rem;
+}
+
+/* Daftar Review & Form Review */
 .reviews {
   padding: 0;
   list-style: none;
+  display: grid;
+  gap: 0.75rem;
 }
 
 .reviews li {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--line);
+  padding: 1rem 1.15rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+.reviews li p {
+  margin: 0.4rem 0;
 }
 
 .form {
   display: grid;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: white;
+  gap: 0.9rem;
+  margin-top: 1.75rem;
+  padding: 1.35rem;
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.form h3 {
+  margin: 0 0 0.25rem;
 }
 
 .form label {
   display: grid;
-  gap: 0.25rem;
+  gap: 0.35rem;
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .navbar {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+  }
 }
