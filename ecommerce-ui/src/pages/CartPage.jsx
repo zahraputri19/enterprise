@@ -45,11 +45,11 @@ export default function CartPage({ userId }) {
               <tbody>
                 {data.items.map((item) => (
                   <tr key={item.id}>
-                    <td>
+                    <td data-label="Produk">
                       {item.product ? item.product.name : <em>Produk tidak tersedia</em>}
                     </td>
-                    <td>{item.product ? formatRupiah(item.product.price) : '-'}</td>
-                    <td>
+                    <td data-label="Harga">{item.product ? formatRupiah(item.product.price) : '-'}</td>
+                    <td data-label="Jumlah">
                       <button
                         type="button"
                         aria-label="Kurangi"
@@ -67,12 +67,12 @@ export default function CartPage({ userId }) {
                         +
                       </button>
                     </td>
-                    <td>
+                    <td data-label="Subtotal">
                       {item.product
                         ? formatRupiah(Number(item.product.price) * item.quantity)
                         : '-'}
                     </td>
-                    <td>
+                    <td data-label="Aksi">
                       <button type="button" onClick={() => run(() => removeCartItem(item.id))}>
                         Hapus
                       </button>
